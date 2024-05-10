@@ -15,6 +15,34 @@
       "when": 1714911171012,
       "tag": "0001_fantastic_stephen_strange",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714998059060,
+      "tag": "0002_soft_warbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1715011767160,
+      "tag": "0003_spotty_tusk",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1715169009931,
+      "tag": "0004_nervous_mordo",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1715171131915,
+      "tag": "0005_faulty_shinko_yamashiro",
+      "breakpoints": true
     }
   ]
 }
