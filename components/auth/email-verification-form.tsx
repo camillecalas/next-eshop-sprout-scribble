@@ -26,7 +26,7 @@ export const EmailVerificationForm = () => {
 			}
 			if (data.success) {
 				setSuccess(data.success)
-				router.push("auth/login")
+				router.push("/auth/login")
 			}
 		})
 	}, [])
@@ -42,7 +42,7 @@ export const EmailVerificationForm = () => {
 				cardTitle="Verify your account">
 				<div className="flex items-center flex-col w-full justify-center">
 					<p>{!success && !error ? 'Verifying email...' : null}</p>
-					<FormSuccess message={success} />
+					<FormSuccess message={success}/>
 					<FormError message={error} />
 				</div>
 			</AuthCard>

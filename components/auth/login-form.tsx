@@ -21,6 +21,8 @@ import * as z from "zod"
 import { emailSignIn } from "@/server/actions/email-signin"
 import { useAction } from 'next-safe-action/hooks'
 import cn from "classnames";
+import { FormSuccess } from "./form-success"
+import { FormError } from "./form-error"
 
 export const LoginForm = () => {
 	const form = useForm({
@@ -35,7 +37,11 @@ export const LoginForm = () => {
 	const [success, setSuccess] = useState("")
 
 	const {execute, status} = useAction(emailSignIn, {
-		onSuccess(data) {}
+		onSuccess(data) {
+			console.log(`ICI ${data}`)
+			if (data?.error) setError(data.error)
+			if (data?.success) setSuccess(data.success)
+		}
 	})
 
 	const onSubmit = (values: z.infer<typeof LoginSchema>) => {
@@ -90,6 +96,8 @@ export const LoginForm = () => {
 								</FormItem>
 							)}
 						/>
+						<FormSuccess message={success}/> 
+						<FormError message={error} />
 						<Button size={"sm"} variant={'link'} asChild>
 							<Link href='/auth/reset'>Forgot your password</Link>
 						</Button>

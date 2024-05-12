@@ -12,9 +12,11 @@ import { sendVerificationEmail } from './email';
 
 const action = createSafeActionClient();
 
-export const emailRegister = action(RegisterSchema, async ({email, name, password}) => {
-	const hashedPassword = await bcrypt.hash(password, 10)
-	const existingUser = await db.query.users.findFirst({
+export const emailRegister = action(
+		RegisterSchema, 
+		async ({email, name, password}) => {
+			const hashedPassword = await bcrypt.hash(password, 10)
+			const existingUser = await db.query.users.findFirst({
 		where: eq(users.email, email),
 	})
 	
@@ -31,6 +33,7 @@ export const emailRegister = action(RegisterSchema, async ({email, name, passwor
 	await db.insert(users).values({
 		email,
 		name,
+		password: hashedPassword,
 	})
 	const verificationToken = await generateEmailVerificationToken(email)
 	await sendVerificationEmail(verificationToken[0].email, verificationToken[0].token)
