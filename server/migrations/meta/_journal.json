@@ -43,6 +43,13 @@
       "when": 1715171131915,
       "tag": "0005_faulty_shinko_yamashiro",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1715514634458,
+      "tag": "0006_narrow_talisman",
+      "breakpoints": true
     }
   ]
 }
