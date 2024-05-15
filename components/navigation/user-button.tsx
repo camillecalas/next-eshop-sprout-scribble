@@ -13,8 +13,23 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
 import { LogOut, Moon, Settings, Sun, Truck, TruckIcon } from "lucide-react"
+import { useTheme } from "next-themes"
+import { Switch } from "@/components/ui/switch"
+import { useState } from "react"
+
 
 export const UserButton = ({user}: Session) => {
+	const {setTheme, theme} = useTheme()
+	const [checked, setChecked] = useState(false)
+
+	function setSwitchState(){
+		switch(theme){
+			case "dark": return setChecked(true);
+			case "light": return setChecked(false);
+			case "system": return setChecked(true);
+		}
+	}
+
 	if (user) {
 		return (
 			<DropdownMenu modal={false}>
@@ -59,13 +74,38 @@ export const UserButton = ({user}: Session) => {
 					<Settings size={14} className="mr-3 group-hover:rotate-180 transition-all duration-300 ease-in-out"/>Settings
 				</DropdownMenuItem>
 
-				<DropdownMenuItem className="py-2 font-medium cursor-pointer transition-all duration-500">
-					<div className="flex items-center">
-						<Sun  size={14}/>
-						<Moon  size={14}/>
-						<p>Theme</p><span>theme</span>
-					</div>
-				</DropdownMenuItem>
+				{theme &&
+					<DropdownMenuItem className="py-2 font-medium cursor-pointer transition-all duration-500">
+						<div onClick={(e)=> e.stopPropagation()}  className="flex items-center group">
+							<div className="relative flex mr-3">
+								<Sun 
+									size={14} 
+									className="group-hover:text-yellow-600
+										absolute
+										group-hover:rotate-180 
+										dark:scale-0 
+										transition-all duration-500 ease-in-out"
+								/>
+								<Moon size={14} className="group-hover:text-blue-400 
+									group-hover:rotate-45 
+									dark:scale-100 scale-0
+									dark:-rotate-90 
+									transition-all duration-500 ease-in-out"
+								/>
+							</div>
+							<p className="dark:text-blue-400 text-secondary-foreground/75 text-yellow-600">
+								{theme[0].toUpperCase() + theme.slice(1)} Mode
+							</p>
+							<Switch  
+								className="scale-75 ml-4"
+								checked={checked} onCheckedChange={(e)=> {
+								setChecked((prev)=> !prev)
+								if (e) setTheme("dark")
+								if (!e) setTheme("light")
+							}}/>
+						</div>
+					</DropdownMenuItem>
+				}
 
 				<DropdownMenuItem 
 					onClick={() => signOut()}
