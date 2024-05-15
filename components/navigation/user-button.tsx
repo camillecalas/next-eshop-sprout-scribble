@@ -16,11 +16,13 @@ import { LogOut, Moon, Settings, Sun, Truck, TruckIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Switch } from "@/components/ui/switch"
 import { useState } from "react"
-
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export const UserButton = ({user}: Session) => {
 	const {setTheme, theme} = useTheme()
 	const [checked, setChecked] = useState(false)
+	const router = useRouter()
 
 	function setSwitchState(){
 		switch(theme){
@@ -66,16 +68,24 @@ export const UserButton = ({user}: Session) => {
           </div>
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem className="group py-2 font-medium cursor-pointer transition-all duration-500 ease-in-out">
-					<TruckIcon  size={14} className="mr-3 group-hover:translate-x-1 transition-all duration-300"/>My orders
+				<DropdownMenuItem 
+					onClick={()=>router.push('/dashboard/orders')}
+					className="group py-2 font-medium cursor-pointer ease-in-out">
+					<TruckIcon 
+						size={14} 
+						className="mr-3 group-hover:translate-x-1 transition-all duration-300"/>My orders
 				</DropdownMenuItem>
 
-				<DropdownMenuItem className="group py-2 font-medium cursor-pointer transition-all duration-500">
-					<Settings size={14} className="mr-3 group-hover:rotate-180 transition-all duration-300 ease-in-out"/>Settings
+				<DropdownMenuItem 
+					onClick={()=>router.push('/dashboard/settings')}
+					className="group py-2 font-medium cursor-pointer">
+					<Settings 
+						size={14} 
+						className="mr-3 group-hover:rotate-180 transition-all duration-300 ease-in-out"/>Settings
 				</DropdownMenuItem>
 
 				{theme &&
-					<DropdownMenuItem className="py-2 font-medium cursor-pointer transition-all duration-500">
+					<DropdownMenuItem className="py-2 font-medium cursor-pointer">
 						<div onClick={(e)=> e.stopPropagation()}  className="flex items-center group">
 							<div className="relative flex mr-3">
 								<Sun 
@@ -109,7 +119,7 @@ export const UserButton = ({user}: Session) => {
 
 				<DropdownMenuItem 
 					onClick={() => signOut()}
-					className="group focus:bg-destructive/30 py-2 font-medium cursor-pointer transition-all duration-500">
+					className="group focus:bg-destructive/30 py-2 font-medium cursor-pointer">
 					<LogOut size={14} className="mr-3 group-hover:scale-75 transition-all duration-300 ease-in-out"/>Sign out
 				</DropdownMenuItem>
 			
