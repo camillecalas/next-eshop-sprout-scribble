@@ -11,7 +11,6 @@ export default async function DashboardLayout({
 	}){
 		const session = await auth();
 
-
 		const adminLinks = session?.user.role === "admin" ? [{
 			label: 'Analytics',
 			path: '/dashboard/anyalytics',
@@ -30,9 +29,9 @@ export default async function DashboardLayout({
 		] : []
 
 		const userLinks = [{
-			label: 'Orders',
-			path: '/dashboard/orders',
-			icon: <Truck size={16}/>
+				label: 'Orders',
+				path: '/dashboard/orders',
+				icon: <Truck size={16}/>
 			},
 			{
 				label: 'Settings',
