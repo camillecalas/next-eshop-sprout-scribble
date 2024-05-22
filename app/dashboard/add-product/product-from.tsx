@@ -33,6 +33,7 @@ import { useEffect } from "react"
 
 export default function ProductForm(){
 	const form = useForm<zProductSchema>({
+		resolver: zodResolver(ProductSchema),
 		defaultValues: {
 			title: "",
 			description: "",
@@ -73,7 +74,7 @@ export default function ProductForm(){
 							<FormItem>
 								<FormLabel>Description</FormLabel>
 								<FormControl>
-									{/* <Input placeholder="Saekdong Stripe" {...field} /> */}
+									<Tiptap val={field.value}/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>

@@ -8,10 +8,12 @@ import {
 	primaryKey,
 	integer,
 	serial,
+	real,
   } from "drizzle-orm/pg-core"
 import { drizzle } from "drizzle-orm/postgres-js"
 import type { AdapterAccount } from "next-auth/adapters"
 import {createId} from '@paralleldrive/cuid2'
+import { timeStamp } from "console"
    
 export const RoleEnum = pgEnum("roles", ["user", "admin"])
 
@@ -96,5 +98,12 @@ export const twoFactorTokens = pgTable(
 	})
 )
    
+export const products = pgTable('products', {
+	id: serial('id').primaryKey(),
+	description: text('description').notNull(),
+	title: text('description').notNull(),
+	created: timestamp('created').defaultNow(),
+	price: real('price').notNull()
+})
    
    
