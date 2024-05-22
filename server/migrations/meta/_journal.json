@@ -50,6 +50,13 @@
       "when": 1715514634458,
       "tag": "0006_narrow_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1716208998302,
+      "tag": "0007_sour_shotgun",
+      "breakpoints": true
     }
   ]
 }

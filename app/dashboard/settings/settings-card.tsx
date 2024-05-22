@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Session } from "next-auth"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { set, useForm } from "react-hook-form"
 import { z } from "zod"
 import {
 	Form,
@@ -30,8 +30,8 @@ import { FormSuccess } from "@/components/auth/form-success"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useAction } from "next-safe-action/hooks"
-// import { settings } from "@/server/actions/settings"
-// import { UploadButton } from "@/app/api/uploadthing/upload"
+import { settings } from "@/server/actions/settings"
+import { UploadButton } from "@/app/api/uploadthing/upload"
 
 
 type SettingsForm = {
@@ -39,8 +39,8 @@ type SettingsForm = {
 }
 
 export default function SettingCard(session: SettingsForm) {
-	const [error, setError] = useState<string | null>(null)
-	const [success, setSuccess] = useState<string | null>(null)
+	const [error, setError] = useState<string | undefined>(null)
+	const [success, setSuccess] = useState<string | undefined>(null)
 	const [avatarUploading, setAvatarUploading] = useState(false)
 
 
@@ -51,9 +51,21 @@ export default function SettingCard(session: SettingsForm) {
 			newPassword: undefined,
 			name: session.session.user?.name || undefined,
 			email: session.session.user?.email || undefined,
-			// isTwoFactorEnabled: session.session.user?.isTwoFactorEnabled || false,
+			image: session.session.user.image || undefined,
+			isTwoFactorEnabled: session.session.user?.isTwoFactorEnabled || undefined,
 		}
 	})
+
+	const { execute, status } = useAction(settings, {
+		onSuccess: (data) => {
+		  if (data?.success) setSuccess(data.success)
+		  if (data?.error) setError(data.error)
+		},
+		onError: (error) => {
+		  setError("Something went wrong")
+		},
+	  })
+	
 
 	const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
 		execute(values)
@@ -105,6 +117,32 @@ export default function SettingCard(session: SettingsForm) {
 												className="rounded-full"
 											/>
 										)}
+										<UploadButton
+											onUploadBegin={()=>{
+												setAvatarUploading(true)
+											}}
+											onUploadError={(error)=> {
+												form.setError("image", {
+													type: 'validate',
+													message: error.message
+												})
+												setAvatarUploading(false)
+												return
+											}}
+											onClientUploadComplete={(res)=> {
+												form.setValue("image", res[0].url!)
+												setAvatarUploading(false)
+												return
+											}}
+										 	className="scale-75 ut-button:ring-primary  ut-label:bg-red-50  ut-button:bg-primary/75  hover:ut-button:bg-primary/100 ut:button:transition-all ut-button:duration-500  ut-label:hidden ut-allowed-content:hidden"
+											endpoint="avatarUploader" 
+											content={{
+												button({ ready }) {
+												  if (ready) return <div>Change Avatar</div>
+												  return <div>Uploading...</div>
+												},
+											}}
+										/>
 
 									</div>
 									<FormControl>
@@ -127,7 +165,7 @@ export default function SettingCard(session: SettingsForm) {
 								<FormItem>
 								<FormLabel>Password</FormLabel>
 								<FormControl>
-									<Input placeholder="*******" disabled={status === "executing"} {...field} />
+									<Input placeholder="*******" disabled={status === "executing" || session?.session.user.isOAuth} {...field} />
 								</FormControl>
 								<FormMessage />
 								</FormItem>
@@ -143,7 +181,7 @@ export default function SettingCard(session: SettingsForm) {
 								<FormItem>
 								<FormLabel>New Password</FormLabel>
 								<FormControl>
-									<Input placeholder="*******" disabled={status === "executing"} {...field} />
+									<Input placeholder="*******" disabled={status === "executing" || session?.session.user.isOAuth} {...field} />
 								</FormControl>
 								<FormMessage />
 								</FormItem>
@@ -161,7 +199,9 @@ export default function SettingCard(session: SettingsForm) {
 									Enable two factor authenntification for your account
 								</FormDescription>
 								<FormControl>
-									<Switch disabled={status === 'executing'} />
+									<Switch disabled={status === 'executing' || session?.session.user.isOAuth} 
+										checked={field.value}
+										onCheckedChange={field.onChange}/>
 								</FormControl>
 								<FormMessage />
 								</FormItem>
@@ -180,7 +220,5 @@ export default function SettingCard(session: SettingsForm) {
 				</Form>
 			</CardContent>
 		</Card>
-
-
 	)
 }
