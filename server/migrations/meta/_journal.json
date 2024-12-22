@@ -64,6 +64,20 @@
       "when": 1716382797219,
       "tag": "0008_calm_infant_terrible",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1716409781756,
+      "tag": "0009_purple_starfox",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1723366080158,
+      "tag": "0010_slow_puppet_master",
+      "breakpoints": true
     }
   ]
 }

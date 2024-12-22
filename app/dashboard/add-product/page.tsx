@@ -1,12 +1,10 @@
-import { auth } from "@/server/auth"
-import { redirect } from "next/dist/server/api-utils"
-import ProductForm from "./product-from"
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
+import ProductForm from "./product-from";
 
-export default async function AddProduct(){
-	const session = await auth()
-	if (session?.user.role !== 'admin') return redirect('/dashboard/settings')
+export default async function AddProduct() {
+    const session = await auth();
+    if (session?.user.role !== "admin") return redirect("/dashboard/settings");
 
-	return(
-		<ProductForm/>
-	)
+    return <ProductForm />;
 }
