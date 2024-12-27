@@ -30,7 +30,7 @@ import { useAction } from "next-safe-action/hooks";
 import { createVariant } from "@/server/actions/create-variant";
 import { toast } from "sonner";
 import { forwardRef, useEffect, useState } from "react";
-// import { deleteVariant } from "@/server/actions/delete-variant";
+import { deleteVariant } from "@/server/actions/delete-variant";
 
 type VariantProps = {
     children: React.ReactNode;
@@ -54,10 +54,12 @@ export const ProductVariant = forwardRef<HTMLDivElement, VariantProps>(
             },
         });
 
+        console.log("editmode", editMode);
         const [open, setOpen] = useState(false);
 
         const setEdit = () => {
             if (!editMode) {
+                console.log("ICI");
                 form.reset();
                 return;
             }
@@ -101,20 +103,20 @@ export const ProductVariant = forwardRef<HTMLDivElement, VariantProps>(
             },
         });
 
-        // const variantAction = useAction(deleteVariant, {
-        //     onExecute() {
-        //         toast.loading("Deleting variant", { duration: 1 });
-        //         setOpen(false);
-        //     },
-        //     onSuccess(data) {
-        //         if (data?.error) {
-        //             toast.error(data.error);
-        //         }
-        //         if (data?.success) {
-        //             toast.success(data.success);
-        //         }
-        //     },
-        // });
+        const variantAction = useAction(deleteVariant, {
+            onExecute() {
+                // toast.loading("Deleting variant", { duration: 1 });
+                setOpen(false);
+            },
+            onSuccess(data) {
+                if (data?.error) {
+                    toast.error(data.error);
+                }
+                if (data?.success) {
+                    toast.success(data.success);
+                }
+            },
+        });
 
         function onSubmit(values: z.infer<typeof VariantSchema>) {
             // Do something with the form values.
@@ -196,26 +198,25 @@ export const ProductVariant = forwardRef<HTMLDivElement, VariantProps>(
                                     <Button
                                         variant={"destructive"}
                                         type="button"
-                                        onClick={(e) => e.preventDefault()}
-                                        // disabled={
-                                        //     variantAction.status === "executing"
-                                        // }
-                                        // onClick={(e) => {
-                                        //     e.preventDefault();
-                                        //     variantAction.execute({
-                                        //         id: variant.id,
-                                        //     });
-                                        // }}
+                                        disabled={
+                                            variantAction.status === "executing"
+                                        }
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            variantAction.execute({
+                                                id: variant.id,
+                                            });
+                                        }}
                                     >
                                         Delete Variant
                                     </Button>
                                 )}
                                 <Button
-                                    // disabled={
-                                    //     status === "executing" ||
-                                    //     !form.formState.isValid ||
-                                    //     !form.formState.isDirty
-                                    // }
+                                    disabled={
+                                        status === "executing" ||
+                                        !form.formState.isValid ||
+                                        !form.formState.isDirty
+                                    }
                                     type="submit"
                                 >
                                     {editMode

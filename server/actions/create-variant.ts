@@ -11,16 +11,16 @@ import {
 } from "../schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-// import algoliasearch from "algoliasearch";
+import algoliasearch from "algoliasearch";
 
 const action = createSafeActionClient();
 
-// const client = algoliasearch(
-//     process.env.NEXT_PUBLIC_ALGOLIA_ID!,
-//     process.env.ALGOLIA_ADMIN!
-// );
-//
-// const algoliaIndex = client.initIndex("products");
+const client = algoliasearch(
+    process.env.NEXT_PUBLIC_ALGOLIA_ID!,
+    process.env.ALGOLIA_ADMIN!
+);
+
+const algoliaIndex = client.initIndex("products");
 
 export const createVariant = action(
     VariantSchema,
@@ -61,18 +61,16 @@ export const createVariant = action(
                         order: idx,
                     }))
                 );
-                // algoliaIndex.partialUpdateObject({
-                //     objectID: editVariant[0].id.toString(),
-                //     id: editVariant[0].productID,
-                //     productType: editVariant[0].productType,
-                //     variantImages: newImgs[0].url,
-                // });
+                algoliaIndex.partialUpdateObject({
+                    objectID: editVariant[0].id.toString(),
+                    id: editVariant[0].productID,
+                    productType: editVariant[0].productType,
+                    variantImages: newImgs[0].url,
+                });
                 revalidatePath("/dashboard/products");
                 return { success: `Edited ${productType}` };
             }
             if (!editMode) {
-                console.log("ici");
-                console.log("productVariant", productVariants);
                 const newVariant = await db
                     .insert(productVariants)
                     .values({
@@ -81,13 +79,11 @@ export const createVariant = action(
                         productID,
                     })
                     .returning();
-                console.log("newVariant", newVariant);
-
-                // const product = await db.query.products.findFirst({
-                //     where: eq(products.id, productID),
-                // });
+                const product = await db.query.products.findFirst({
+                    where: eq(products.id, productID),
+                });
                 await db.insert(variantTags).values(
-                    tags.map((tag: string) => ({
+                    tags.map((tag) => ({
                         tag,
                         variantID: newVariant[0].id,
                     }))
@@ -101,21 +97,20 @@ export const createVariant = action(
                         order: idx,
                     }))
                 );
-                // if (product) {
-                //     algoliaIndex.saveObject({
-                //         objectID: newVariant[0].id.toString(),
-                //         id: newVariant[0].productID,
-                //         title: product.title,
-                //         price: product.price,
-                //         productType: newVariant[0].productType,
-                //         variantImages: newImgs[0].url,
-                //     });
-                // }
+                if (product) {
+                    algoliaIndex.saveObject({
+                        objectID: newVariant[0].id.toString(),
+                        id: newVariant[0].productID,
+                        title: product.title,
+                        price: product.price,
+                        productType: newVariant[0].productType,
+                        variantImages: newImgs[0].url,
+                    });
+                }
                 revalidatePath("/dashboard/products");
                 return { success: `Added ${productType}` };
             }
         } catch (error) {
-            console.error("Error creating variant:", error);
             return { error: "Failed to create variant" };
         }
     }

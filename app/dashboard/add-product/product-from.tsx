@@ -91,7 +91,7 @@ export default function ProductForm() {
                 toast.loading("Editing product");
             }
             if (!editMode) {
-                toast.loading("Creating product");
+                // toast.loading("Creating product");
             }
         },
     });
