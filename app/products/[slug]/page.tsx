@@ -1,11 +1,14 @@
 import ProductType from "@/components/products/product-types";
 import Products from "@/components/products/products";
 import { db } from "@/server";
-import { productVariants } from "@/server/schema";
+import { productVariants, variantImages } from "@/server/schema";
 import { eq } from "drizzle-orm";
 import { Separator } from "@/components/ui/separator";
 import formatPrice from "@/lib/format-price";
 import ProductPick from "@/components/products/product-pick";
+import Reviews from "@/components/reviews/reviews";
+import Image from "next/image";
+import ProductShowcase from "@/components/products/product-showcase";
 
 export async function generateStaticParams() {
     const data = await db.query.productVariants.findMany({
@@ -40,19 +43,23 @@ export default async function Page({ params }: { params: { slug: string } }) {
     if (variant) {
         return (
             <main>
-                <section>
+                <section className="flex flex-col lg:flex-row gap-4 lg:gap-12">
                     <div className="flex-1">
-                        <h1>Images</h1>
+                        <ProductShowcase
+                            variants={variant.product.productVariants}
+                        />
                     </div>
-                    <div className="flex gap-2 flex-col flex-1">
-                        <h2>{variant?.product.title}</h2>
+                    <div className="flex flex-col flex-1">
+                        <h2 className="text-2xl font-bold">
+                            {variant?.product.title}
+                        </h2>
                         <div>
                             <ProductType
                                 variants={variant.product.productVariants}
                             />
                         </div>
-                        <Separator />
-                        <p className="text-2xl font-medium">
+                        <Separator className="my-2" />
+                        <p className="text-2xl font-medium py-2">
                             {formatPrice(variant.product.price)}
                         </p>
                         <div
@@ -60,7 +67,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                                 __html: variant.product.description,
                             }}
                         ></div>
-                        <p className="text-secondary-foreground">
+                        <p className="text-secondary-foreground font-medium my-2">
                             Available Colors
                         </p>
                         <div className="flex gap-4 py">
@@ -81,6 +88,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                         </div>
                     </div>
                 </section>
+                <Reviews productID={variant.productID} />
             </main>
         );
     }
