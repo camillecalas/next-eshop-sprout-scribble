@@ -1,10 +1,8 @@
 {
-  "id": "5f5de5cd-336a-4314-acd4-4b50fab80cf2",
-  "prevId": "4de2d4b7-c043-485d-ad59-c0fddf64bd86",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "account": {
+    "public.account": {
       "name": "account",
       "schema": "",
       "columns": {
@@ -80,15 +78,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -100,9 +98,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "email_tokens": {
+    "public.email_tokens": {
       "name": "email_tokens",
       "schema": "",
       "columns": {
@@ -142,9 +143,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "password_reset_tokens": {
+    "public.password_reset_tokens": {
       "name": "password_reset_tokens",
       "schema": "",
       "columns": {
@@ -184,9 +188,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "productVariants": {
+    "public.productVariants": {
       "name": "productVariants",
       "schema": "",
       "columns": {
@@ -227,21 +234,24 @@
         "productVariants_productID_products_id_fk": {
           "name": "productVariants_productID_products_id_fk",
           "tableFrom": "productVariants",
-          "tableTo": "products",
           "columnsFrom": [
             "productID"
           ],
+          "tableTo": "products",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "products": {
+    "public.products": {
       "name": "products",
       "schema": "",
       "columns": {
@@ -280,9 +290,12 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "two_factor_tokens": {
+    "public.two_factor_tokens": {
       "name": "two_factor_tokens",
       "schema": "",
       "columns": {
@@ -322,15 +335,15 @@
         "two_factor_tokens_userId_user_id_fk": {
           "name": "two_factor_tokens_userId_user_id_fk",
           "tableFrom": "two_factor_tokens",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -342,9 +355,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "user": {
+    "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
@@ -402,9 +418,12 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "variantImages": {
+    "public.variantImages": {
       "name": "variantImages",
       "schema": "",
       "columns": {
@@ -450,21 +469,24 @@
         "variantImages_variantID_productVariants_id_fk": {
           "name": "variantImages_variantID_productVariants_id_fk",
           "tableFrom": "variantImages",
-          "tableTo": "productVariants",
           "columnsFrom": [
             "variantID"
           ],
+          "tableTo": "productVariants",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "variantTags": {
+    "public.variantTags": {
       "name": "variantTags",
       "schema": "",
       "columns": {
@@ -492,34 +514,44 @@
         "variantTags_variantID_productVariants_id_fk": {
           "name": "variantTags_variantID_productVariants_id_fk",
           "tableFrom": "variantTags",
-          "tableTo": "productVariants",
           "columnsFrom": [
             "variantID"
           ],
+          "tableTo": "productVariants",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     }
   },
   "enums": {
-    "roles": {
+    "public.roles": {
       "name": "roles",
-      "values": {
-        "user": "user",
-        "admin": "admin"
-      }
+      "schema": "public",
+      "values": [
+        "user",
+        "admin"
+      ]
     }
   },
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "5f5de5cd-336a-4314-acd4-4b50fab80cf2",
+  "prevId": "4de2d4b7-c043-485d-ad59-c0fddf64bd86",
+  "sequences": {},
+  "policies": {},
+  "views": {},
+  "roles": {}
 }

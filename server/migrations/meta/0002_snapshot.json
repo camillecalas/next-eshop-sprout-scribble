@@ -1,10 +1,8 @@
 {
-  "id": "acfea21a-5ac9-4c91-a9dc-cffb67689962",
-  "prevId": "1f29a033-e623-4180-a37b-fc392cc25501",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "account": {
+    "public.account": {
       "name": "account",
       "schema": "",
       "columns": {
@@ -80,15 +78,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -100,9 +98,12 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     },
-    "user": {
+    "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
@@ -154,22 +155,32 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false,
+      "checkConstraints": {}
     }
   },
   "enums": {
-    "roles": {
+    "public.roles": {
       "name": "roles",
-      "values": {
-        "user": "user",
-        "admin": "admin"
-      }
+      "schema": "public",
+      "values": [
+        "user",
+        "admin"
+      ]
     }
   },
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "acfea21a-5ac9-4c91-a9dc-cffb67689962",
+  "prevId": "1f29a033-e623-4180-a37b-fc392cc25501",
+  "sequences": {},
+  "policies": {},
+  "views": {},
+  "roles": {}
 }

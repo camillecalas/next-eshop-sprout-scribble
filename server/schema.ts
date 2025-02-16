@@ -1,5 +1,5 @@
-// import {pgTable, pgEnum, serial, text} from "drizzle-orm/pg-core"
-import { boolean } from "drizzle-orm/mysql-core";
+import { boolean } from "drizzle-orm/pg-core";
+
 import {
     timestamp,
     pgTable,
@@ -17,6 +17,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { timeStamp } from "console";
 import { relations } from "drizzle-orm";
 import { revalidate } from "@/app/page";
+import { ProductVariant } from "@/app/dashboard/products/product-variant";
 
 export const RoleEnum = pgEnum("roles", ["user", "admin"]);
 
@@ -213,6 +214,37 @@ export const reviewRelations = relations(reviews, ({ one }) => ({
 }));
 
 export const userRelations = relations(users, ({ many }) => ({
-    reviews: many(reviews, { relationName: "user_previews" }),
+    reviews: many(reviews, { relationName: "user_reviews" }),
+    orders: many(orders, { relationName: "user_orders" }),
 }));
 // export type Products = InferSelectModel<typeof products>
+
+export const orders = pgTable("orders", {
+    id: serial("id").primaryKey(),
+    userID: text("userID")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    total: real("total").notNull(),
+    created: timestamp("created").defaultNow(),
+    receiptURL: text("receiptURL"),
+});
+
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+    user: one(users, {
+        fields: [orders.userID],
+        references: [users.id],
+        relationName: "user_orders",
+    }),
+    orderProduct: many(orderProduct, { relationName: "orderProduct" }),
+}));
+
+export const orderProduct = pgTable("orderProduct", {
+    id: serial("id").primaryKey(),
+    quantity: integer("quantity").notNull(),
+    productVariantID: serial("productVariantID")
+        .notNull()
+        .references(() => productVariants.id, { onDelete: "cascade" }),
+    productID: serial("productID")
+        .notNull()
+        .references(() => products.id, { onDelete: "cascade" }),
+});
