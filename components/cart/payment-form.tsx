@@ -27,12 +27,13 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         }
         const { error: submitError } = await elements.submit();
         if (submitError) {
+			console.log("4");
             setErrorMessage(submitError.message!);
             setIsLoading(false);
             return;
         }
         const { data } = await createPaymentIntent({
-            amount: totalPrice,
+            amount: totalPrice * 100,
             currency: "usd",
             cart: cart.map((item) => ({
                 quantity: item.variant.quantity,
@@ -42,46 +43,42 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
                 image: item.image,
             })),
         });
+        console.log("data", data);
         if (data?.error) {
             setErrorMessage(data.error);
             setIsLoading(false);
             return;
         }
         if (data?.success) {
-            console.log("data");
+            console.log("1");
             const { error } = await stripe.confirmPayment({
                 elements,
                 clientSecret: data.success.clientSecretID!,
                 redirect: "if_required",
                 confirmParams: {
-                    // return_url:
-                    //     "https://4a86-2001-861-5b80-1c20-b5bf-f9ba-5568-e4d7.ngrok.io/success",
-
                     return_url: "https://localhost:3000/success",
                     receipt_email: data.success.user as string,
                 },
             });
             if (error) {
+				console.log("2");
                 setErrorMessage(error.message!);
                 setIsLoading(false);
                 return;
             } else {
+				console.log("3");
                 setIsLoading(false);
-                console.log("save orddr");
+                console.log("**** SAVE ORDER ****");
             }
         }
     };
-    console.log("cliet secret");
-    console.log("Stripe:", stripe);
-    console.log("Elements:", elements);
+
     return (
         <form onSubmit={handleSubmit}>
-            {/* <PaymentElement /> */}
-            <PaymentElement options={{ layout: "auto" }} />
-
+            <PaymentElement />
             <AddressElement options={{ mode: "shipping" }} />
             <Button disabled={isLoading}>
-                {isLoading ? "Traitement..." : "Payer maintenant"}
+                {isLoading ? "Processing..." : "Pay now"}{" "}
             </Button>
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
         </form>

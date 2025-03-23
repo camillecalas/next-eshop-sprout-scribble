@@ -6,7 +6,6 @@ import Stripe from "stripe";
 import { auth } from "../auth";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
-console.log("stripe", stripe);
 const action = createSafeActionClient();
 
 export const createPaymentIntent = action(
@@ -27,7 +26,6 @@ export const createPaymentIntent = action(
                 cart: JSON.stringify(cart),
             },
         });
-
         return {
             success: {
                 paymentIntentID: paymentIntent.id,

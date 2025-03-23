@@ -1,39 +1,31 @@
 "use client";
 
-import { Elements, PaymentElement } from "@stripe/react-stripe-js";
-import { motion } from "framer-motion";
-import getStripe from "@/lib/get-stripe";
 import { useCartStore } from "@/lib/client-store";
+import getStripe from "@/lib/get-stripe";
+import { Elements } from "@stripe/react-stripe-js";
+import { motion } from "framer-motion";
 import PaymentForm from "./payment-form";
-import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+
+const stripe = getStripe();
 
 export default function Payment() {
     const { cart } = useCartStore();
-    const [stripe, setStripe] = useState<any | null>(null); // Stocke directement l'instance Stripe
-
-    useEffect(() => {
-        getStripe().then((stripeInstance) => setStripe(stripeInstance)); // Résout la Promise
-    }, []);
+    const { theme } = useTheme();
 
     const totalPrice = cart.reduce((acc, item) => {
         return acc + item.price * item.variant.quantity;
     }, 0);
 
-    console.log("total price", totalPrice);
-    // console.log("Stripe Instance:", stripe);
-
-    if (!stripe) {
-        return <p>Loading payment...</p>; // Show loading state until Stripe initializes
-    }
-
     return (
-        <motion.div>
+        <motion.div className="max-w-2xl mx-auto">
             <Elements
                 stripe={stripe}
                 options={{
                     mode: "payment",
                     currency: "usd",
                     amount: totalPrice * 100,
+                    appearance: { theme: theme === "dark" ? "night" : "flat" },
                 }}
             >
                 <PaymentForm totalPrice={totalPrice} />
